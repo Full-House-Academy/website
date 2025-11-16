@@ -150,7 +150,7 @@ export default function Courses() {
                 onClick={() => openPopup("Call4Cash")}
                 className="mx-auto mt-8 block text-lg md:text-xl font-semibold px-6 py-2 
                 rounded-xl bg-primaryColor text-secondaryColor border-2 border-primaryColor
-                shadow-md hover:bg-transparent hover:text-primaryColor transition-all duration-300"
+                shadow-md hover:bg-transparent hover:text-primaryColor transition-all duration-300 cursor-pointer"
               >
                 Apply Now
               </button>
@@ -187,7 +187,7 @@ export default function Courses() {
                 onClick={() => openPopup("Deals4Win")}
                 className="mx-auto mt-8 block text-lg md:text-xl font-semibold px-6 py-2 
                 rounded-xl bg-primaryColor text-secondaryColor border-2 border-primaryColor
-                shadow-md hover:bg-transparent hover:text-primaryColor transition-all duration-300"
+                shadow-md hover:bg-transparent hover:text-primaryColor transition-all duration-300 cursor-pointer"
               >
                 Apply Now
               </button>
@@ -245,7 +245,8 @@ export default function Courses() {
 
             <button
               onClick={handleApply}
-              className="w-full mt-6 py-3 rounded-xl bg-primaryColor text-secondaryColor font-bold hover:bg-transparent hover:text-primaryColor border-2 border-primaryColor transition-all"
+              className="w-full mt-6 py-3 rounded-xl bg-primaryColor text-secondaryColor font-bold hover:bg-transparent 
+              hover:text-primaryColor border-2 border-primaryColor transition-all cursor-pointer"
             >
               Apply
             </button>
