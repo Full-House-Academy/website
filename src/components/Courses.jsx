@@ -130,11 +130,11 @@ export default function Courses() {
                 />
               </div>
 
-              <h3 className="w-fit mx-auto uppercase text-2xl md:text-3xl font-bold text-primaryColor tracking-wide">
+              <h3 className="w-fit mx-auto uppercase text-2xl md:text-3xl font-bold text-primaryColor tracking-wide text-shadow-lg/30">
                 Call4cash
               </h3>
 
-              <h4 className="font-bold w-fit mx-auto uppercase text-lg md:text-xl text-primaryColor opacity-90 mt-2">
+              <h4 className="font-bold w-fit mx-auto uppercase text-lg md:text-xl text-primaryColor opacity-90 mt-2 text-shadow-lg/20">
                 From cold to gold
               </h4>
 
@@ -168,11 +168,11 @@ export default function Courses() {
                 />
               </div>
 
-              <h3 className="w-fit mx-auto uppercase text-2xl md:text-3xl font-bold text-primaryColor tracking-wide">
+              <h3 className="w-fit mx-auto uppercase text-2xl md:text-3xl font-bold text-primaryColor tracking-wide text-shadow-lg/30">
                 Deals4win
               </h3>
 
-              <h4 className="font-bold w-fit mx-auto uppercase text-lg md:text-xl text-primaryColor opacity-90 mt-2">
+              <h4 className="font-bold w-fit mx-auto uppercase text-lg md:text-xl text-primaryColor opacity-90 mt-2 text-shadow-lg/20">
                 Close. claim. conquer.
               </h4>
 
