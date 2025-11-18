@@ -3,7 +3,7 @@ export default function LandingPage() {
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background Wallpaper */}
       <img
-        src="/src/data/landing.png"
+        src="/landing.png"
         alt="Landing Photo"
         className="w-full h-full object-cover"
       />

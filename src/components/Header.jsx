@@ -45,7 +45,7 @@ export default function Header() {
         <div className="h-[70px] w-full flex justify-between items-center p-4">
           <img
             className="max-h-[60px] md:max-h-[70px]"
-            src="/src/data/logo.png"
+            src="/logo.png"
             alt="Full House Academy Logo"
           />
 
