@@ -125,7 +125,7 @@ export default function Courses() {
               <div className="h-[100px] w-fit mx-auto mb-4">
                 <img
                   className="h-full drop-shadow-md"
-                  src="/plan-1.png"
+                  src="plan-1.png"
                   alt=""
                 />
               </div>
@@ -163,7 +163,7 @@ export default function Courses() {
               <div className="h-[100px] w-fit mx-auto mb-4">
                 <img
                   className="h-full drop-shadow-md"
-                  src="/plan-2.png"
+                  src="plan-2.png"
                   alt=""
                 />
               </div>
