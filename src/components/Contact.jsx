@@ -12,7 +12,7 @@ export default function Contact() {
       id="contact"
       className="bg-gradient-to-br from-gray-600 via-[#0a0a0a] to-gray-600 text-whiteColor py-12 px-6"
     >
-      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center ">
         {/* Phone */}
         <a
           href="tel:+201044904414"
@@ -62,7 +62,7 @@ export default function Contact() {
 
         <a
           href="mailto:FullHouseAcademy@outlook.com"
-          className="col-span-1 md:col-span-2 flex items-center gap-3 text-xl md:text-2xl 
+          className="col-span-1 md:col-span-2 flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-xl md:text-2xl 
           font-semibold hover:text-[#0078D4] hover:underline transition-all duration-300"
         >
           <FontAwesomeIcon icon={faEnvelope} className="text-2xl md:text-3xl" />
