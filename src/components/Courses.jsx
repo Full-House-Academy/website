@@ -251,6 +251,7 @@ export default function Courses() {
                 <li>Learn negotiation, follow-ups, and deal structuring.</li>
                 <li>Understand REAL U.S. acquisition work.</li>
                 <li>Certified Acquisition Manager qualification.</li>
+                <li>Build a winning pipeline with advanced CRM strategies.</li>
               </ul>
 
               <button
@@ -432,7 +433,7 @@ export default function Courses() {
                           </p>
                           <p className="text-gray-500 mt-1">
                             أعرف كلمات بسيطة جداً… مش قادر أتكلم أو أكتب إلا
-                            عبارات قصيرة جداً.
+                            عبارات قصيرة جداً
                           </p>
                         </div>
                       )}
@@ -446,7 +447,7 @@ export default function Courses() {
                           </p>
                           <p className="text-gray-500 mt-1">
                             أعرف الكلمات الأكاديمية الأساسية… لكني مش قادر أتكلم
-                            بطلاقة.
+                            بطلاقة
                           </p>
                         </div>
                       )}
@@ -460,7 +461,7 @@ export default function Courses() {
                           </p>
                           <p className="text-gray-500 mt-1">
                             أقدر أتكلم وأكتب جمل بسيطة… ومحتاج تدريب للمواقف
-                            المعقدة.
+                            المعقدة
                           </p>
                         </div>
                       )}
@@ -474,7 +475,7 @@ export default function Courses() {
                           </p>
                           <p className="text-gray-500 mt-1">
                             أتواصل بطلاقة تقريباً… وأقدر أتعامل مع المتحدثين
-                            الأصليين.
+                            الأصليين
                           </p>
                         </div>
                       )}
@@ -486,8 +487,7 @@ export default function Courses() {
                             Fluent speaking/writing, has real-life experience.
                           </p>
                           <p className="text-gray-500 mt-1">
-                            أتكلم وأكتب بطلاقة… وعندي خبرة عملية في مواقف
-                            حقيقية.
+                            أتكلم وأكتب بطلاقة… وعندي خبرة عملية في مواقف حقيقية
                           </p>
                         </div>
                       )}
@@ -538,7 +538,7 @@ export default function Courses() {
                             Knows nothing about cold calling in real estate.
                           </p>
                           <p className="text-gray-500 mt-1">
-                            ما أعرفش حاجة عن الـ Cold Calling.
+                            ما أعرفش حاجة عن الـ Cold Calling
                           </p>
                         </div>
                       )}
@@ -548,7 +548,7 @@ export default function Courses() {
                           <p className="font-semibold">Level 2 – Basic</p>
                           <p>Heard/read a little, no practical experience.</p>
                           <p className="text-gray-500 mt-1">
-                            سمعت أو قرأت معلومات بسيطة… لكن بدون خبرة عملية.
+                            سمعت أو قرأت معلومات بسيطة… لكن بدون خبرة عملية
                           </p>
                         </div>
                       )}
@@ -560,7 +560,7 @@ export default function Courses() {
                           </p>
                           <p>Watched someone working, knows basic terms.</p>
                           <p className="text-gray-500 mt-1">
-                            اتفرجت على حد بيشتغل… وأعرف المصطلحات الأساسية.
+                            اتفرجت على حد بيشتغل… وأعرف المصطلحات الأساسية
                           </p>
                         </div>
                       )}
@@ -570,7 +570,7 @@ export default function Courses() {
                           <p className="font-semibold">Level 4 – Experienced</p>
                           <p>Worked before but needed stronger fundamentals.</p>
                           <p className="text-gray-500 mt-1">
-                            عندي خبرة… لكن الأساسيات كانت ضعيفة ومحتاج أقويها.
+                            عندي خبرة… لكن الأساسيات كانت ضعيفة ومحتاج أقويها
                           </p>
                         </div>
                       )}
