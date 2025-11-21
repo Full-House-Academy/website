@@ -247,11 +247,11 @@ export default function Courses() {
               </h4>
 
               <ul className="text-left mt-6 list-disc pl-5 space-y-2 text-gray-700 text-lg">
-                <li>Upskill callers into Acquisition Managers.</li>
+                <li>Upskill cold callers into Acquisition Managers.</li>
                 <li>Learn negotiation, follow-ups, and deal structuring.</li>
                 <li>Understand REAL U.S. acquisition work.</li>
-                <li>Certified Acquisition Manager qualification.</li>
                 <li>Build a winning pipeline with advanced CRM strategies.</li>
+                <li>Certified Acquisition Manager qualification.</li>
               </ul>
 
               <button
