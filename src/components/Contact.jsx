@@ -4,7 +4,6 @@ import {
   faFacebook,
   faInstagram,
   faTelegram,
-  faWhatsapp,
 } from "@fortawesome/free-brands-svg-icons";
 
 export default function Contact() {
@@ -17,8 +16,8 @@ export default function Contact() {
         {/* Phone */}
         <a
           href="tel:+201044904414"
-          className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 text-xl md:text-2xl font-semibold 
-          hover:text-tertiaryColor transition-all duration-300"
+          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-xl md:text-2xl font-semibold 
+          hover:text-tertiaryColor hover:underline transition-all duration-300"
         >
           <FontAwesomeIcon icon={faPhone} className="text-2xl md:text-3xl" />
           <span>+20 104 490 4414</span>
@@ -29,20 +28,19 @@ export default function Contact() {
           href="https://www.facebook.com/share/1BL9kmV61H/?mibextid=wwXIfr"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 text-xl md:text-2xl font-semibold 
-          hover:text-tertiaryColor transition-all duration-300"
+          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-xl md:text-2xl 
+          font-semibold hover:text-[#1877F2] hover:underline transition-all duration-300"
         >
           <FontAwesomeIcon icon={faFacebook} className="text-2xl md:text-3xl" />
           <span>FullHouseAcademy</span>
         </a>
 
-        {/* Instagram */}
         <a
           href="https://www.instagram.com/fullhouseacademy_?igsh=anpyZmI4ZGxva2Jw&utm_source=qr"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 text-xl md:text-2xl font-semibold 
-          hover:text-tertiaryColor transition-all duration-300"
+          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-xl md:text-2xl 
+          font-semibold hover:text-[#E4405F] hover:underline transition-all duration-300"
         >
           <FontAwesomeIcon
             icon={faInstagram}
@@ -51,35 +49,21 @@ export default function Contact() {
           <span>fullhouseacademy_</span>
         </a>
 
-        {/* Telegram */}
         <a
           href="https://t.me/+201044904414"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 text-xl md:text-2xl font-semibold 
-          hover:text-tertiaryColor transition-all duration-300"
+          className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-xl md:text-2xl 
+          font-semibold hover:text-[#0088cc] hover:underline transition-all duration-300"
         >
           <FontAwesomeIcon icon={faTelegram} className="text-2xl md:text-3xl" />
           <span>+20 104 490 4414</span>
         </a>
 
-        {/* WhatsApp */}
-        <a
-          href="https://wa.me/+201044904414"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 text-xl md:text-2xl font-semibold 
-          hover:text-tertiaryColor transition-all duration-300"
-        >
-          <FontAwesomeIcon icon={faWhatsapp} className="text-2xl md:text-3xl" />
-          <span>+20 104 490 4414</span>
-        </a>
-
-        {/* Mail */}
         <a
           href="mailto:FullHouseAcademy@outlook.com"
-          className="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center items-center gap-3 text-xl md:text-2xl font-semibold 
-          hover:text-tertiaryColor transition-all duration-300"
+          className="col-span-1 md:col-span-2 flex items-center gap-3 text-xl md:text-2xl 
+          font-semibold hover:text-[#0078D4] hover:underline transition-all duration-300"
         >
           <FontAwesomeIcon icon={faEnvelope} className="text-2xl md:text-3xl" />
           <span>FullHouseAcademy@outlook.com</span>

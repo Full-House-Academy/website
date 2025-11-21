@@ -17,8 +17,8 @@ export default function Courses() {
     phone: "",
     email: "",
     city: "",
-    english: "",
-    knowledge: "",
+    english: 1,
+    knowledge: 1,
     notes: "",
   });
 
@@ -29,7 +29,16 @@ export default function Courses() {
   const openPopup = (courseName) => {
     setSelectedCourse(courseName);
     setShowPopup(true);
-    setStep(1); // reset to step 1
+    setStep(1); // always start at step 1
+    setForm({
+      name: "",
+      phone: "",
+      email: "",
+      city: "",
+      english: 1, // default Level 1
+      knowledge: 1, // default Level 1
+      notes: "",
+    });
   };
 
   const closePopup = () => {
@@ -40,8 +49,9 @@ export default function Courses() {
       phone: "",
       email: "",
       city: "",
-      english: "",
-      knowledge: "",
+      english: 1,
+      knowledge: 1,
+      notes: "",
     });
     setFormError({});
   };
@@ -89,9 +99,16 @@ export default function Courses() {
     return valid;
   };
 
+  // NEXT BUTTON (STEP 1)
   const handleNext = () => {
-    if (validateStep1()) {
+    if (!validateStep1()) return;
+
+    // Only go to Step 2 if course is Call4Cash
+    if (selectedCourse.toLowerCase() === "call4cash") {
       setStep(2);
+    } else {
+      // For Deals4Win, submit immediately
+      handleSubmit();
     }
   };
 
@@ -99,18 +116,24 @@ export default function Courses() {
   // SUBMIT FINAL FORM
   // ---------------------------
   const handleSubmit = () => {
-    if (!form.english || !form.knowledge || form.notes.length > 100) {
-      setFormError({
-        english: !form.english ? "Please select English level." : false,
-        knowledge: !form.knowledge ? "Please select field knowledge." : false,
-        notes:
-          form.notes.length > 100 ? "Maximum allowed characters is 100" : false,
-      });
+    // For Call4Cash, validate Step 2
+    if (selectedCourse.toLowerCase() === "call4cash") {
+      if (!form.english || !form.knowledge || form.notes.length > 100) {
+        setFormError({
+          english: !form.english ? "Please select English level." : false,
+          knowledge: !form.knowledge ? "Please select field knowledge." : false,
+          notes:
+            form.notes.length > 100
+              ? "Maximum allowed characters is 100"
+              : false,
+        });
 
-      setTimeout(() => setFormError({}), 4000);
-      return;
+        setTimeout(() => setFormError({}), 4000);
+        return;
+      }
     }
 
+    // Send data to emailjs for both plans
     emailjs
       .send(
         "service_cgylv8l",
@@ -146,7 +169,6 @@ export default function Courses() {
         }
       );
   };
-
   return (
     <>
       {/* MAIN COURSES SECTION */}
@@ -356,7 +378,7 @@ export default function Courses() {
                   className="w-full mt-6 py-3 rounded-xl bg-primaryColor text-secondaryColor font-bold hover:bg-transparent 
                   hover:text-primaryColor border-2 border-primaryColor transition-all cursor-pointer"
                 >
-                  Next
+                  {selectedCourse === "Call4Cash" ? "Next" : "Submit"}
                 </button>
               </div>
             )}
@@ -377,7 +399,7 @@ export default function Courses() {
                   )}
 
                   {/* RADIO GROUP */}
-                  <div className="flex gap-4 mt-3">
+                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mt-3">
                     {[1, 2, 3, 4, 5].map((num) => (
                       <label
                         key={num}
@@ -485,7 +507,7 @@ export default function Courses() {
                   )}
 
                   {/* RADIO GROUP */}
-                  <div className="flex gap-4 mt-3">
+                  <div className="grid grid-cols-3 md:grid-cols-4  gap-4 mt-3">
                     {[1, 2, 3, 4].map((num) => (
                       <label
                         key={num}
