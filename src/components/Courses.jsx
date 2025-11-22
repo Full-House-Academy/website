@@ -133,6 +133,10 @@ export default function Courses() {
       }
     }
 
+    // Prepare English and knowledge values according to the selected course
+    const englishValue = selectedCourse === "Deals4Win" ? "" : form.english;
+    const knowledgeValue = selectedCourse === "Deals4Win" ? "" : form.knowledge;
+
     // Send data to emailjs for both plans
     emailjs
       .send(
@@ -143,8 +147,8 @@ export default function Courses() {
           phone: form.phone,
           email: form.email,
           city: form.city,
-          english: selectedCourse === "Deals4Win" ? "" : form.english,
-          knowledge: selectedCourse === "Deals4Win" ? "" : form.knowledge,
+          english: englishValue,
+          knowledge: knowledgeValue,
           course: selectedCourse,
           notes: form.notes,
         },
