@@ -136,22 +136,24 @@ export default function Courses() {
     // Prepare English and knowledge values according to the selected course
     const englishValue = selectedCourse === "Deals4Win" ? "" : form.english;
     const knowledgeValue = selectedCourse === "Deals4Win" ? "" : form.knowledge;
+    const objToSend = {
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      city: form.city,
+      english: englishValue,
+      knowledge: knowledgeValue,
+      course: selectedCourse,
+      notes: form.notes,
+    };
 
+    console.log(objToSend);
     // Send data to emailjs for both plans
     emailjs
       .send(
         "service_cgylv8l",
         "template_9vazg7o",
-        {
-          name: form.name,
-          phone: form.phone,
-          email: form.email,
-          city: form.city,
-          english: englishValue,
-          knowledge: knowledgeValue,
-          course: selectedCourse,
-          notes: form.notes,
-        },
+        objToSend,
         "x-0Qu9p8ND5rUtFuY"
       )
       .then(
