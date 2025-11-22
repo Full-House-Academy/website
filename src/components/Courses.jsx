@@ -275,7 +275,7 @@ export default function Courses() {
       {/* POPUP MODAL */}
       {showPopup && (
         <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-[100] p-4">
-          <div className="bg-whiteColor w-full max-w-lg rounded-2xl p-6 shadow-2xl">
+          <div className="bg-whiteColor w-full max-w-lg rounded-2xl p-6 shadow-2xl max-h-[80%] overflow-auto">
             <h4 className="text-2xl font-bold text-primaryColor mb-4 text-center text-shadow-lg/20">
               Apply for {selectedCourse}
             </h4>
