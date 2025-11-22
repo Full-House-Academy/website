@@ -147,7 +147,6 @@ export default function Courses() {
       notes: form.notes,
     };
 
-    console.log(objToSend);
     // Send data to emailjs for both plans
     emailjs
       .send(
