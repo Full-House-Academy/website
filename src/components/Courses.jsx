@@ -4,7 +4,8 @@ import emailjs from "emailjs-com";
 export default function Courses() {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
-  
+
+  // regexes
   const nameRegex = /^[A-Za-z\s]{3,30}$/;
   const phoneRegex = /^[0-9]{8,30}$/;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -22,23 +23,25 @@ export default function Courses() {
     notes: "",
   });
 
-  // ERROR STATE
+  // ERROR STATE + global popup
   const [formError, setFormError] = useState({});
-  const [popUp, setPopUp] = useState({ type: "", message: "" });
+  const [popUp, setPopUp] = useState({ type: "", message: "", closing: false });
 
+  // open popup: Call4Cash starts on step 1 (levels), Deals4Win starts on step 2 (personal info)
   const openPopup = (courseName) => {
     setSelectedCourse(courseName);
     setShowPopup(true);
-    setStep(1); // always start at step 1
+    setStep(courseName === "Call4Cash" ? 1 : 2);
     setForm({
       name: "",
       phone: "",
       email: "",
       city: "",
-      english: 1, // default Level 1
-      knowledge: 1, // default Level 1
+      english: 1,
+      knowledge: 1,
       notes: "",
     });
+    setFormError({});
   };
 
   const closePopup = () => {
@@ -63,79 +66,83 @@ export default function Courses() {
     }, 250);
   };
 
-  // ---------------------------
-  // VALIDATIONS FOR STEP 1
-  // ---------------------------
-  const validateStep1 = () => {
-    let errors = {};
+  // validate the level step (Step 1 for Call4Cash)
+  const validateLevelStep = () => {
+    const errors = {};
+    let valid = true;
+
+    if (!form.english) {
+      errors.english = "Please select English level.";
+      valid = false;
+    }
+    if (!form.knowledge) {
+      errors.knowledge = "Please select field knowledge.";
+      valid = false;
+    }
+    if (form.notes && form.notes.length > 100) {
+      errors.notes = "Maximum allowed characters for notes is 100.";
+      valid = false;
+    }
+
+    setFormError(errors);
+    if (!valid) setTimeout(() => setFormError({}), 4000);
+    return valid;
+  };
+
+  // validate personal info (Step 2)
+  const validatePersonalInfo = () => {
+    const errors = {};
     let valid = true;
 
     if (!nameRegex.test(form.name)) {
       errors.name = "Name must be 3–30 letters only.";
       valid = false;
     }
-
     if (!phoneRegex.test(form.phone)) {
       errors.phone = "Phone must be numbers only, 8–30 digits.";
       valid = false;
     }
-
     if (!emailRegex.test(form.email) || !form.email.includes(".com")) {
-      errors.email = "Please enter a valid email.";
+      errors.email = "Please enter a valid email (must include .com).";
       valid = false;
     }
-
     if (!cityRegex.test(form.city)) {
       errors.city = "City must be 3–30 letters only.";
       valid = false;
     }
 
     setFormError(errors);
-
-    if (!valid) {
-      setTimeout(() => setFormError({}), 4000);
-    }
-
+    if (!valid) setTimeout(() => setFormError({}), 4000);
     return valid;
   };
 
-  // NEXT BUTTON (STEP 1)
+  // Next button handler used on Step 1 (for Call4Cash) — for Deals4Win Next acts as submit since we start on Step 2
   const handleNext = () => {
-    if (!validateStep1()) return;
-
-    // Only go to Step 2 if course is Call4Cash
-    if (selectedCourse.toLowerCase() === "call4cash") {
+    // If current UI is the level step (step===1) we validate levels and then go to personal info (step 2)
+    if (step === 1) {
+      // If somehow Deals4Win opened on step 1 (shouldn't), treat as level step too
+      if (!validateLevelStep()) return;
       setStep(2);
-    } else {
-      // For Deals4Win, submit immediately
-      handleSubmit();
+      return;
     }
+
+    // If not step1, fallback to submission
+    handleSubmit();
   };
 
-  // ---------------------------
-  // SUBMIT FINAL FORM
-  // ---------------------------
+  // final submit
   const handleSubmit = () => {
-    // For Call4Cash, validate Step 2
-    if (selectedCourse.toLowerCase() === "call4cash") {
-      if (!form.english || !form.knowledge || form.notes.length > 100) {
-        setFormError({
-          english: !form.english ? "Please select English level." : false,
-          knowledge: !form.knowledge ? "Please select field knowledge." : false,
-          notes:
-            form.notes.length > 100
-              ? "Maximum allowed characters is 100"
-              : false,
-        });
+    // Validate personal info first
+    if (!validatePersonalInfo()) return;
 
-        setTimeout(() => setFormError({}), 4000);
-        return;
-      }
+    // If Call4Cash ensure level step was completed (it should be if user flowed normally)
+    if (selectedCourse === "Call4Cash") {
+      if (!validateLevelStep()) return;
     }
 
-    // Prepare English and knowledge values according to the selected course
     const englishValue = selectedCourse === "Deals4Win" ? "" : form.english;
     const knowledgeValue = selectedCourse === "Deals4Win" ? "" : form.knowledge;
+
     const objToSend = {
       name: form.name,
       phone: form.phone,
@@ -147,7 +154,6 @@ export default function Courses() {
       notes: form.notes,
     };
 
-    // Send data to emailjs for both plans
     emailjs
       .send(
         "service_cgylv8l",
@@ -174,6 +180,7 @@ export default function Courses() {
         }
       );
   };
+
   return (
     <>
       {/* MAIN COURSES SECTION */}
@@ -280,161 +287,54 @@ export default function Courses() {
               Apply for {selectedCourse}
             </h4>
 
-            {/* STEP 1 --------------------------- */}
-            {step === 1 && (
-              <div className="flex flex-col gap-4">
-                {formError.name && (
-                  <span className="text-red-600 text-sm -mb-4 ml-2">
-                    {formError.name}
-                  </span>
-                )}
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className="border p-3 rounded-xl"
-                  value={form.name}
-                  onChange={(e) => {
-                    var inputValue = e.target.value;
-                    if (!/^[A-Za-z\s]{0,30}$/.test(inputValue)) {
-                      setFormError({
-                        ...formError,
-                        name: "Name must be 3–30 letters only.",
-                      });
-                      setTimeout(() => setFormError({}), 3000);
-                      return;
-                    }
-                    setForm({ ...form, name: inputValue });
-                  }}
-                />
-
-                {formError.phone && (
-                  <span className="text-red-600 text-sm -mb-4 ml-2">
-                    {formError.phone}
-                  </span>
-                )}
-                <input
-                  type="tel"
-                  placeholder="Phone Number"
-                  className="border p-3 rounded-xl"
-                  value={form.phone}
-                  onChange={(e) => {
-                    var inputValue = e.target.value;
-                    if (!/^[0-9]{0,30}$/.test(inputValue)) {
-                      setFormError({
-                        ...formError,
-                        phone: "Phone must be numbers only, 8–30 digits.",
-                      });
-                      setTimeout(() => setFormError({}), 3000);
-                      return;
-                    }
-                    setForm({ ...form, phone: inputValue });
-                  }}
-                />
-
-                {formError.email && (
-                  <span className="text-red-600 text-sm -mb-4 ml-2">
-                    {formError.email}
-                  </span>
-                )}
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="border p-3 rounded-xl"
-                  value={form.email}
-                  onChange={(e) => {
-                    var inputValue = e.target.value;
-                    if (inputValue.length > 50) {
-                      setFormError({
-                        ...formError,
-                        email: "Maximum allowed characters is 50",
-                      });
-                      setTimeout(() => setFormError({}), 3000);
-                      return;
-                    }
-                    setForm({ ...form, email: inputValue });
-                  }}
-                />
-
-                {formError.city && (
-                  <span className="text-red-600 text-sm -mb-4 ml-2">
-                    {formError.city}
-                  </span>
-                )}
-                <input
-                  type="text"
-                  placeholder="City"
-                  className="border p-3 rounded-xl"
-                  value={form.city}
-                  onChange={(e) => {
-                    var inputValue = e.target.value;
-                    if (!/^[A-Za-z\s]{0,30}$/.test(inputValue)) {
-                      setFormError({
-                        ...formError,
-                        city: "City must be 3–30 letters only.",
-                      });
-                      setTimeout(() => setFormError({}), 3000);
-                      return;
-                    }
-                    setForm({ ...form, city: inputValue });
-                  }}
-                />
-
-                <button
-                  onClick={handleNext}
-                  className="w-full mt-6 py-3 rounded-xl bg-primaryColor text-secondaryColor font-bold hover:bg-transparent 
-                  hover:text-primaryColor border-2 border-primaryColor transition-all cursor-pointer"
-                >
-                  {selectedCourse === "Call4Cash" ? "Next" : "Submit"}
-                </button>
-              </div>
-            )}
-
-            {/* STEP 2 --------------------------- */}
-            {step === 2 && (
+            {/* -------- STEP 1: LEVELS (ONLY used by Call4Cash initially) -------- */}
+            {step === 1 && selectedCourse === "Call4Cash" && (
               <div className="flex flex-col gap-6">
-                {/* ---------------- ENGLISH LEVEL ---------------- */}
                 <div>
-                  <h3 className="text-xl font-semibold text-primaryColor mb-2 text-shadow-lg/20">
+                  <h3 className="text-xl font-semibold text-primaryColor mb-2">
                     English Level
                   </h3>
-
                   {formError.english && (
                     <span className="text-red-600 text-sm ml-2">
                       {formError.english}
                     </span>
                   )}
 
-                  {/* RADIO GROUP */}
-                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mt-3">
+                  <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mt-3">
                     {[1, 2, 3, 4, 5].map((num) => (
                       <label
                         key={num}
                         htmlFor={`eng-${num}`}
-                        className="flex items-center gap-1 cursor-pointer"
+                        className={`font-medium flex items-center gap-2 p-2 rounded-md cursor-pointer border transition ${
+                          form.english === num
+                            ? "bg-primaryColor text-white border-primaryColor"
+                            : "bg-white"
+                        }`}
                       >
                         <input
-                          type="radio"
                           id={`eng-${num}`}
+                          type="radio"
                           name="english"
                           value={num}
                           checked={form.english === num}
                           onChange={() => setForm({ ...form, english: num })}
-                          className="w-5 h-5"
+                          className="w-4 h-4"
                         />
-                        <span>Level {num}</span>
+                        <div className="text-sm">Level {num}</div>
                       </label>
                     ))}
                   </div>
 
-                  {/* DESCRIPTION */}
                   {form.english && (
-                    <div className="mt-4 text-sm text-gray-600 leading-relaxed">
+                    <div
+                      className={`fade-in mt-4 text-sm text-gray-600 leading-relaxed`}
+                    >
                       {form.english === 1 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 1: Beginner</p>
                           <p>
                             Knows very basic words, cannot speak or write more
-                            than short phrases.
+                            than very short phrases.
                           </p>
                           <p className="text-gray-500 mt-1">
                             أعرف كلمات بسيطة جداً… مش قادر أتكلم أو أكتب إلا
@@ -442,13 +342,12 @@ export default function Courses() {
                           </p>
                         </div>
                       )}
-
                       {form.english === 2 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 2: Basic</p>
                           <p>
-                            Knows basic academic words, understands simple
-                            texts.
+                            Knows basic academic words, can understand simple
+                            texts, but cannot speak fluently.
                           </p>
                           <p className="text-gray-500 mt-1">
                             أعرف الكلمات الأكاديمية الأساسية… لكني مش قادر أتكلم
@@ -456,13 +355,12 @@ export default function Courses() {
                           </p>
                         </div>
                       )}
-
                       {form.english === 3 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 3: Intermediate</p>
                           <p>
-                            Can speak/write simple sentences, understands daily
-                            conversations.
+                            Can speak and write simple sentences, understands
+                            everyday conversations but needs practice.
                           </p>
                           <p className="text-gray-500 mt-1">
                             أقدر أتكلم وأكتب جمل بسيطة… ومحتاج تدريب للمواقف
@@ -470,13 +368,12 @@ export default function Courses() {
                           </p>
                         </div>
                       )}
-
                       {form.english === 4 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 4: Advanced</p>
                           <p>
-                            Communicates almost fluently, understands work
-                            terminology.
+                            Can communicate almost fluently, understands
+                            work-related terms.
                           </p>
                           <p className="text-gray-500 mt-1">
                             أتواصل بطلاقة تقريباً… وأقدر أتعامل مع المتحدثين
@@ -484,12 +381,12 @@ export default function Courses() {
                           </p>
                         </div>
                       )}
-
                       {form.english === 5 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 5: Fluent</p>
                           <p>
-                            Fluent speaking/writing, has real-life experience.
+                            Speaks and writes fluently, has real-life experience
+                            and can work professionally.
                           </p>
                           <p className="text-gray-500 mt-1">
                             أتكلم وأكتب بطلاقة… وعندي خبرة عملية في مواقف حقيقية
@@ -499,45 +396,48 @@ export default function Courses() {
                     </div>
                   )}
                 </div>
-                {/* ---------------- FIELD KNOWLEDGE ---------------- */}
+
                 <div>
-                  <h3 className="text-xl font-semibold text-primaryColor mb-2 text-shadow-lg/20">
+                  <h3 className="text-xl font-semibold text-primaryColor mb-2">
                     Field Knowledge
                   </h3>
-
                   {formError.knowledge && (
                     <span className="text-red-600 text-sm ml-2">
                       {formError.knowledge}
                     </span>
                   )}
 
-                  {/* RADIO GROUP */}
-                  <div className="grid grid-cols-3 md:grid-cols-4  gap-4 mt-3">
+                  <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mt-3">
                     {[1, 2, 3, 4].map((num) => (
                       <label
                         key={num}
                         htmlFor={`knowledge-${num}`}
-                        className="flex items-center gap-1 cursor-pointer"
+                        className={`flex items-center gap-2 p-2 rounded-md cursor-pointer border transition ${
+                          form.knowledge === num
+                            ? "bg-primaryColor text-white border-primaryColor"
+                            : "bg-white"
+                        }`}
                       >
                         <input
-                          type="radio"
                           id={`knowledge-${num}`}
+                          type="radio"
                           name="knowledge"
                           value={num}
                           checked={form.knowledge === num}
                           onChange={() => setForm({ ...form, knowledge: num })}
-                          className="w-5 h-5"
+                          className="w-4 h-4"
                         />
-                        <span>Level {num}</span>
+                        <div className="text-sm">Level {num}</div>
                       </label>
                     ))}
                   </div>
 
-                  {/* DESCRIPTION */}
                   {form.knowledge && (
-                    <div className="mt-4 text-sm text-gray-600 leading-relaxed">
+                    <div
+                      className={`fade-in mt-4 text-sm text-gray-600 leading-relaxed`}
+                    >
                       {form.knowledge === 1 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 1 – None</p>
                           <p>
                             Knows nothing about cold calling in real estate.
@@ -547,33 +447,39 @@ export default function Courses() {
                           </p>
                         </div>
                       )}
-
                       {form.knowledge === 2 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 2 – Basic</p>
-                          <p>Heard/read a little, no practical experience.</p>
+                          <p>
+                            Has heard/read a little, but no practical
+                            experience.
+                          </p>
                           <p className="text-gray-500 mt-1">
                             سمعت أو قرأت معلومات بسيطة… لكن بدون خبرة عملية
                           </p>
                         </div>
                       )}
-
                       {form.knowledge === 3 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">
                             Level 3 – Some Experience
                           </p>
-                          <p>Watched someone working, knows basic terms.</p>
+                          <p>
+                            Has observed someone working and knows the basic
+                            terms.
+                          </p>
                           <p className="text-gray-500 mt-1">
                             اتفرجت على حد بيشتغل… وأعرف المصطلحات الأساسية
                           </p>
                         </div>
                       )}
-
                       {form.knowledge === 4 && (
-                        <div className="fade-in mt-4 text-sm text-gray-600 leading-relaxed">
+                        <div>
                           <p className="font-semibold">Level 4 – Experienced</p>
-                          <p>Worked before but needed stronger fundamentals.</p>
+                          <p>
+                            Has worked before but felt fundamentals needed
+                            strengthening.
+                          </p>
                           <p className="text-gray-500 mt-1">
                             عندي خبرة… لكن الأساسيات كانت ضعيفة ومحتاج أقويها
                           </p>
@@ -585,10 +491,9 @@ export default function Courses() {
 
                 {/* EXTRA NOTES */}
                 <div>
-                  <h3 className="text-xl font-semibold text-primaryColor mb-2 text-shadow-lg/20">
+                  <h3 className="text-xl font-semibold text-primaryColor mb-2">
                     Extra Notes (optional)
                   </h3>
-
                   {formError.notes && (
                     <span className="text-red-600 text-sm ml-2">
                       {formError.notes}
@@ -602,24 +507,93 @@ export default function Courses() {
                     onChange={(e) =>
                       setForm({ ...form, notes: e.target.value })
                     }
-                  ></textarea>
+                  />
                 </div>
-                {/* BUTTONS: BACK + SUBMIT */}
-                <div className="flex items-center gap-3 mt-6">
-                  {/* BACK BUTTON */}
-                  <button
-                    onClick={() => setStep(1)}
-                    className="w-1/2 py-3 rounded-xl border-2 border-primaryColor text-primaryColor font-bold 
-                    hover:bg-primaryColor hover:text-secondaryColor transition-all cursor-pointer"
-                  >
-                    Back
-                  </button>
 
-                  {/* SUBMIT BUTTON */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      // Next moves to personal info
+                      handleNext();
+                    }}
+                    className="w-full py-3 rounded-xl bg-primaryColor text-secondaryColor font-bold hover:bg-transparent hover:text-primaryColor border-2 border-primaryColor transition-all cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* -------- STEP 2: PERSONAL INFO (for both flows) -------- */}
+            {step === 2 && (
+              <div className="flex flex-col gap-4">
+                {formError.name && (
+                  <span className="text-red-600 text-sm -mb-4 ml-2">
+                    {formError.name}
+                  </span>
+                )}
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  className="border p-3 rounded-xl"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+
+                {formError.phone && (
+                  <span className="text-red-600 text-sm -mb-4 ml-2">
+                    {formError.phone}
+                  </span>
+                )}
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  className="border p-3 rounded-xl"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+
+                {formError.email && (
+                  <span className="text-red-600 text-sm -mb-4 ml-2">
+                    {formError.email}
+                  </span>
+                )}
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  className="border p-3 rounded-xl"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
+
+                {formError.city && (
+                  <span className="text-red-600 text-sm -mb-4 ml-2">
+                    {formError.city}
+                  </span>
+                )}
+                <input
+                  type="text"
+                  placeholder="City"
+                  className="border p-3 rounded-xl"
+                  value={form.city}
+                  onChange={(e) => setForm({ ...form, city: e.target.value })}
+                />
+
+                <div className="flex items-center gap-3 mt-6">
+                  {selectedCourse === "Call4Cash" && (
+                    <button
+                      onClick={() => setStep(1)}
+                      className="w-1/2 py-3 rounded-xl border-2 border-primaryColor text-primaryColor font-bold hover:bg-primaryColor hover:text-secondaryColor transition-all cursor-pointer"
+                    >
+                      Back
+                    </button>
+                  )}
+
                   <button
                     onClick={handleSubmit}
-                    className="w-1/2 py-3 rounded-xl bg-primaryColor text-secondaryColor font-bold 
-                    hover:bg-transparent hover:text-primaryColor border-2 border-primaryColor transition-all cursor-pointer"
+                    className={`${
+                      selectedCourse === "Call4Cash" ? "w-1/2" : "w-full"
+                    } py-3 rounded-xl bg-primaryColor text-secondaryColor font-bold hover:bg-transparent hover:text-primaryColor border-2 border-primaryColor transition-all cursor-pointer`}
                   >
                     Submit
                   </button>
@@ -663,8 +637,7 @@ export default function Courses() {
 
             <button
               onClick={closeAnimatedPopup}
-              className="mx-auto block px-6 py-2 rounded-xl bg-primaryColor text-secondaryColor 
-              hover:bg-transparent hover:text-primaryColor border-2 border-primaryColor transition-all"
+              className="mx-auto block px-6 py-2 rounded-xl bg-primaryColor text-secondaryColor hover:bg-transparent hover:text-primaryColor border-2 border-primaryColor transition-all"
             >
               OK
             </button>
